@@ -159,7 +159,7 @@ def user(uid: int):
         u.phone = user_data["phone"]
         db.session.add(u)
         db.session.commit()
-        return "", 204, ('отредактировано')
+        return "", 204
 #######  orders
 @app.route("/orders", methods=['GET', 'POST'])
 def orders():
@@ -197,17 +197,17 @@ def order(uid: int):
         order_data = request.args
         q = Order.query.get(uid)
         q.first_name = order_data.get('first_name')
-        q.name = order_data.get('name'),
-        q.description = order_data.get("description"),
-        q.start_date = order_data.get("start_date"),
-        q.end_date = order_data.get("end_date"),
-        q.address = order_data.get("address"),
-        q.price = order_data.get("price"),
-        q.customer_id = order_data.get("customer_id"),
-        q.executor_id = order_data.get("executor_id"),
+        q.name = order_data.get('name')
+        q.description = order_data.get('description')
+        q.start_date = order_data.get('start_date')
+        q.end_date = order_data.get('end_date')
+        q.address = order_data.get('address')
+        q.price = order_data.get('price')
+        q.customer_id = order_data.get('customer_id')
+        q.executor_id = order_data.get('executor_id')
         db.session.add(q)
         db.session.commit()
-        return "", 204, ('отредактировано')
+        return "", 204
 #######   offers
 @app.route("/offers", methods=['GET', 'POST'])
 def offers():
@@ -238,12 +238,12 @@ def offer(uid: int):
     elif request.method == "PUT":
         offer_data = request.args
         f = Offer.query.get(uid)
-        f.order_id = offer_data.get("order_id"),
+        f.order_id = offer_data.get("order_id")
         f.executor_id = offer_data.get("executor_id")
 
         db.session.add(f)
         db.session.commit()
-        return "", 204, ('отредактировано')
+        return "", 204
 
 if __name__ == "__main__":
     app.run()

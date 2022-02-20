@@ -194,17 +194,17 @@ def order(uid: int):
         db.session.commit()
         return "", 204
     elif request.method == "PUT":
-        order_data = json.loads(request.data)
+        order_data = request.args
         q = Order.query.get(uid)
-        q.first_name = user_data["first_name"]
-        q.name = order_data["name"],
-        q.description = order_data["description"],
-        q.start_date = order_data["start_date"],
-        q.end_date = order_data["end_date"],
-        q.address = order_data["address"],
-        q.price = order_data["price"],
-        q.customer_id = order_data["customer_id"],
-        q.executor_id = order_data["executor_id"],
+        q.first_name = order_data.get('first_name')
+        q.name = order_data.get('name'),
+        q.description = order_data.get("description"),
+        q.start_date = order_data.get("start_date"),
+        q.end_date = order_data.get("end_date"),
+        q.address = order_data.get("address"),
+        q.price = order_data.get("price"),
+        q.customer_id = order_data.get("customer_id"),
+        q.executor_id = order_data.get("executor_id"),
         db.session.add(q)
         db.session.commit()
         return "", 204, ('отредактировано')
@@ -236,10 +236,10 @@ def offer(uid: int):
         db.session.commit()
         return "", 204
     elif request.method == "PUT":
-        offer_data = json.loads(request.data)
+        offer_data = request.args
         f = Offer.query.get(uid)
-        f.order_id = offer_data["order_id"],
-        f.executor_id = offer_data["executor_id"]
+        f.order_id = offer_data.get("order_id"),
+        f.executor_id = offer_data.get("executor_id")
 
         db.session.add(f)
         db.session.commit()

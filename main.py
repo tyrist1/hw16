@@ -100,7 +100,7 @@ for order_data in data.orders:
         address=order_data["address"],
         price=order_data["price"],
         customer_id=order_data["customer_id"],
-        executor_id=order_data["price"],
+        executor_id=order_data["executor_id"],
     )
 
     db.session.add(new_order)
@@ -115,12 +115,15 @@ for offer_data in data.offers:
 
     db.session.add(new_offer)
     db.session.commit()
+
+######пользователи
+
 @app.route("/users", methods=['GET', 'POST'])
 def users():
     if request.method == "GET":
         res = []
-        for u in User.query.all():
-            res.append(u.to_dict())
+        for j in User.query.all():
+            res.append(j.to_dict())
         return json.dumps(res), 200, {'Content-Type': 'application/json; charset=utf-8'}
     elif request.method == "POST":
         user_data = json.loads(request.data)
@@ -155,6 +158,90 @@ def user(uid: int):
         u.role = user_data["role"]
         u.phone = user_data["phone"]
         db.session.add(u)
+        db.session.commit()
+        return "", 204, ('отредактировано')
+#######  orders
+@app.route("/orders", methods=['GET', 'POST'])
+def orders():
+    if request.method == "GET":
+        res_1 = []
+        for q in Order.query.all():
+            res_1.append(q.to_dict())
+        return json.dumps(res_1), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    elif request.method == "POST":
+        order_data = json.loads(request.data)
+        new_order = Order(
+            id=order_data["id"],
+            name=order_data["name"],
+            description=order_data["description"],
+            start_date=order_data["start_date"],
+            end_date=order_data["end_date"],
+            address=order_data["address"],
+            price=order_data["price"],
+            customer_id=order_data["customer_id"],
+            executor_id=order_data["executor_id"],
+        )
+        db.session.add(new_order)
+        db.session.commit()
+        return "", 201
+@app.route("/orders/<int:uid>", methods=['GET', 'PUT', 'DELETE'])
+def order(uid: int):
+    if request.method == "GET":
+        return json.dumps(Order.query.get(uid).to_dict()), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    elif request.method == "DELETE":
+        q = Order.query.get(uid)
+        db.session.delete(q)
+        db.session.commit()
+        return "", 204
+    elif request.method == "PUT":
+        order_data = json.loads(request.data)
+        q = Order.query.get(uid)
+        q.first_name = user_data["first_name"]
+        q.name = order_data["name"],
+        q.description = order_data["description"],
+        q.start_date = order_data["start_date"],
+        q.end_date = order_data["end_date"],
+        q.address = order_data["address"],
+        q.price = order_data["price"],
+        q.customer_id = order_data["customer_id"],
+        q.executor_id = order_data["executor_id"],
+        db.session.add(q)
+        db.session.commit()
+        return "", 204, ('отредактировано')
+#######   offers
+@app.route("/offers", methods=['GET', 'POST'])
+def offers():
+    if request.method == "GET":
+        res_2 = []
+        for f in Offer.query.all():
+            res_2.append(f.to_dict())
+        return json.dumps(res_2), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    elif request.method == "POST":
+        offer_data = json.loads(request.data)
+        new_offer = Offer(
+            id=offer_data["id"],
+            order_id=offer_data["order_id"],
+            executor_id=offer_data["executor_id"]
+        )
+        db.session.add(new_offer)
+        db.session.commit()
+        return "", 201
+@app.route("/offers/<int:uid>", methods=['GET', 'PUT', 'DELETE'])
+def offer(uid: int):
+    if request.method == "GET":
+        return json.dumps(Offer.query.get(uid).to_dict()), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    elif request.method == "DELETE":
+        f = Offer.query.get(uid)
+        db.session.delete(f)
+        db.session.commit()
+        return "", 204
+    elif request.method == "PUT":
+        offer_data = json.loads(request.data)
+        f = Offer.query.get(uid)
+        f.order_id = offer_data["order_id"],
+        f.executor_id = offer_data["executor_id"]
+
+        db.session.add(f)
         db.session.commit()
         return "", 204, ('отредактировано')
 
